@@ -8,15 +8,6 @@ import (
 )
 
 func main() {
-
-	//TODO
-	//Добавить баннер
-	//Удалить баннер
-	//Засчитать переход
-	//Выбрать баннер для показа
-	//
-	//
-	//Выгрузка статистики kafka
 	ctx := context.Background()
 
 	a, err := app.NewApp(ctx)
@@ -28,5 +19,4 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to run app: %s", err.Error())
 	}
-
 }
