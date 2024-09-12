@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 
+	"github.com/IBM/sarama"
 	"github.com/joho/godotenv"
 )
 
@@ -31,4 +32,15 @@ type GRPCConfig interface {
 
 type PGConfig interface {
 	DSN() string
+}
+
+type KafkaProducerConfig interface {
+	Brokers() []string
+	Config() *sarama.Config
+}
+
+type KafkaConsumerConfig interface {
+	Brokers() []string
+	GroupID() string
+	Config() *sarama.Config
 }
