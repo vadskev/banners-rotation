@@ -17,8 +17,8 @@ type Storage interface {
 	AddSocialGroup(ctx context.Context, socialGroup *models.SocialGroup) (*models.SocialGroup, error)
 	DeleteSocialGroup(ctx context.Context, socialGroup *models.SocialGroup) (string, error)
 
-	AttachBanner(ctx context.Context) (models.AttachBanner, error)
-	DetachBanner(ctx context.Context) string
+	AttachBanner(ctx context.Context, attach *models.AttachBanner) (*models.AttachBanner, error)
+	DetachBanner(ctx context.Context, attach *models.AttachBanner) (string, error)
 
 	HitBanner(ctx context.Context) (models.HitBanner, error)
 	SelectBanner(ctx context.Context) (models.Banner, error)
