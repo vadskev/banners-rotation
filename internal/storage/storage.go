@@ -8,14 +8,14 @@ import (
 )
 
 type Storage interface {
-	AddBanner(ctx context.Context) (models.Banner, error)
-	DeleteBanner(ctx context.Context) (string, error)
+	AddBanner(ctx context.Context, banner *models.Banner) (*models.Banner, error)
+	DeleteBanner(ctx context.Context, banner *models.Banner) (string, error)
 
-	AddSlot(ctx context.Context) (models.Slot, error)
-	DeleteSlot(ctx context.Context) string
+	AddSlot(ctx context.Context, slot *models.Slot) (*models.Slot, error)
+	DeleteSlot(ctx context.Context, slot *models.Slot) (string, error)
 
-	AddSocialGroup(ctx context.Context) (models.SocialGroup, error)
-	DeleteSocialGroup(ctx context.Context) string
+	AddSocialGroup(ctx context.Context, socialGroup *models.SocialGroup) (*models.SocialGroup, error)
+	DeleteSocialGroup(ctx context.Context, socialGroup *models.SocialGroup) (string, error)
 
 	AttachBanner(ctx context.Context) (models.AttachBanner, error)
 	DetachBanner(ctx context.Context) string

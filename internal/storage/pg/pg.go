@@ -30,7 +30,11 @@ func (d *dbStorage) Ping(ctx context.Context) error {
 }
 
 func (d *dbStorage) Close() {
-	d.db.Close()
+	if d.db != nil {
+		defer func() {
+			d.db.Close()
+		}()
+	}
 }
 
 func (d *dbStorage) DB() *pgxpool.Pool {
