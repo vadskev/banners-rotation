@@ -7,6 +7,8 @@ import (
 	"github.com/vadskev/banners-rotation/internal/api/rotation"
 	"github.com/vadskev/banners-rotation/internal/config"
 	"github.com/vadskev/banners-rotation/internal/config/env"
+	"github.com/vadskev/banners-rotation/internal/queue"
+	"github.com/vadskev/banners-rotation/internal/queue/kafka"
 	"github.com/vadskev/banners-rotation/internal/storage"
 	"github.com/vadskev/banners-rotation/internal/storage/pg"
 )
@@ -16,7 +18,10 @@ type serviceProvider struct {
 	pgConfig   config.PGConfig
 	grpcConfig config.GRPCConfig
 
-	dbStorage storage.Storage
+	kafkaProducerConfig config.KafkaProducerConfig
+
+	dbStorage   storage.Storage
+	queueClient queue.Queue
 
 	rotationImpl *rotation.Implementation
 }
@@ -34,6 +39,19 @@ func (s *serviceProvider) LogConfig() env.LogConfig {
 		s.logConfig = cfg
 	}
 	return s.logConfig
+}
+
+func (s *serviceProvider) KafkaProducerConfig() config.KafkaProducerConfig {
+	if s.kafkaProducerConfig == nil {
+		cfg, err := env.NewKafkaProducerConfig()
+		if err != nil {
+			log.Fatalf("failed to get kafka producer config: %s", err.Error())
+		}
+
+		s.kafkaProducerConfig = cfg
+	}
+
+	return s.kafkaProducerConfig
 }
 
 func (s *serviceProvider) PGConfig() config.PGConfig {
@@ -75,9 +93,20 @@ func (s *serviceProvider) DBClient(ctx context.Context) storage.Storage {
 	return s.dbStorage
 }
 
+func (s *serviceProvider) QueueClient(ctx context.Context) queue.Queue {
+	if s.queueClient == nil {
+		qu, err := kafka.New(ctx, s.KafkaProducerConfig().Brokers(), s.KafkaProducerConfig().Config())
+		if err != nil {
+			log.Fatalf("failed to create kafka client: %v", err)
+		}
+		s.queueClient = qu
+	}
+	return s.queueClient
+}
+
 func (s *serviceProvider) RotationImpl(ctx context.Context) *rotation.Implementation {
 	if s.rotationImpl == nil {
-		s.rotationImpl = rotation.NewImplementation(s.DBClient(ctx))
+		s.rotationImpl = rotation.NewImplementation(s.DBClient(ctx), s.QueueClient(ctx))
 	}
 	return s.rotationImpl
 }
