@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+package rotation_v1;
+
+//import "google/protobuf/timestamp.proto";
+//import "google/protobuf/empty.proto";
+//import "google/protobuf/wrappers.proto";
+
+
+option go_package = "github.com/vadskev/banners-rotation/pkg/rotation_v1;rotation_v1";
+
+service Rotation {
+  // API для создания коллекции баннеров
+  rpc AddBanner(AddBannerRequest) returns (AddBannerResponse);
+  rpc DeleteBanner(DeleteBannerRequest) returns (DeleteBannerResponse);
+
+  // API для создания коллекции слотов
+  rpc AddSlot(AddSlotRequest) returns (AddSlotResponse);
+  rpc DeleteSlot(DeleteSlotRequest) returns (DeleteSlotResponse);
+
+  // API для создания коллекции соц. группы
+  rpc AddSocialGroup(AddSocialGroupRequest) returns (AddSocialGroupResponse);
+  rpc DeleteSocialGroup(DeleteSocialGroupRequest) returns (DeleteSocialGroupResponse);
+
+  // API для прикрепления баннеров к слоту
+  rpc AttachBanner(AttachBannerRequest) returns (AttachBannerResponse);
+  rpc DetachBanner(DetachBannerRequest) returns (DetachBannerResponse);
+
+  // API для ротации
+  rpc HitBanner(HitBannerRequest) returns (HitBannerResponse);
+  rpc SelectBanner(SelectBannerRequest) returns (SelectBannerResponse);
+}
+
+message AddBannerRequest {
+  string description = 1;
+}
+message AddBannerResponse {
+  int32 id = 1;
+}
+
+message DeleteBannerRequest {
+  int32 id = 1;
+}
+message DeleteBannerResponse {
+  string status = 1;
+}
+
+message AddSlotRequest {
+  string description = 1;
+}
+message AddSlotResponse {
+  int32 id = 1;
+}
+
+message DeleteSlotRequest {
+  int32 id = 1;
+}
+message DeleteSlotResponse {
+  string status = 1;
+}
+
+message AddSocialGroupRequest {
+  string description = 1;
+}
+message AddSocialGroupResponse {
+  int32 id = 1;
+}
+
+message DeleteSocialGroupRequest {
+  int32 id = 1;
+}
+message DeleteSocialGroupResponse {
+  string status = 1;
+}
+
+message AttachBannerRequest {
+  int32 banner_id = 1;
+  int32 slot_id = 2;
+}
+message AttachBannerResponse {
+  string status = 1;
+}
+
+message DetachBannerRequest {
+  int32 banner_id = 1;
+  int32 slot_id = 2;
+}
+message DetachBannerResponse {
+  string status = 1;
+}
+
+message HitBannerRequest {
+  int32 banner_id = 1;
+  int32 slot_id = 2;
+  int32 social_group_id = 3;
+}
+message HitBannerResponse {
+  string status = 1;
+}
+
+message SelectBannerRequest {
+  int32 slot_id = 1;
+  int32 social_group_id = 2;
+}
+message SelectBannerResponse {
+  int32 banner_id = 1;
+}
